@@ -6,7 +6,9 @@ from torchvision import transforms
 import cv2
 import numpy as np
 import types
+import time
 from numpy import random
+from ..utils.time_measure import MeasureTime
 
 
 def intersect(box_a, box_b):
@@ -109,8 +111,12 @@ class Resize(object):
         self.size = size
 
     def __call__(self, image, boxes=None, labels=None):
+        t = MeasureTime('Resize')
+
         image = cv2.resize(image, (self.size,
                                  self.size))
+        
+        t.stop()
         return image, boxes, labels
 
 
@@ -316,6 +322,7 @@ class RandomSampleCrop(object):
                 current_boxes[:, 2:] -= rect[:2]
 
                 return current_image, current_boxes, current_labels
+
 
 
 class Expand(object):
