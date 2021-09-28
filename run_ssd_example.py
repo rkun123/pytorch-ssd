@@ -7,6 +7,7 @@ from vision.ssd.mobilenetv3_ssd_lite import create_mobilenetv3_large_ssd_lite, c
 from vision.utils.misc import Timer
 import cv2
 import sys
+from vision.utils.time_measure import MeasureTime
 
 
 if len(sys.argv) < 5:
@@ -51,9 +52,15 @@ elif net_type == 'sq-ssd-lite':
 else:
     predictor = create_vgg_ssd_predictor(net, candidate_size=200)
 
+t = MeasureTime('cv2.imread')
 orig_image = cv2.imread(image_path)
+t.stop()
+t = MeasureTime('cv2.cvtColor')
 image = cv2.cvtColor(orig_image, cv2.COLOR_BGR2RGB)
+t.stop()
+t = MeasureTime('predictor.predict')
 boxes, labels, probs = predictor.predict(image, 10, 0.4)
+t.stop()
 
 for i in range(boxes.size(0)):
     box = boxes[i, :]
@@ -75,5 +82,7 @@ for i in range(boxes.size(0)):
                 (255, 0, 255),
                 2)  # line type
 path = "run_ssd_example_output.jpg"
+t = MeasureTime('cv2.imwrite')
 cv2.imwrite(path, orig_image)
+t.stop()
 print(f"Found {len(probs)} objects. The output image is {path}")

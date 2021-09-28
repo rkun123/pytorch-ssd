@@ -12,7 +12,7 @@ class MeasureTime():
     self.print()
   
   def info(self, text):
-    print('%s[INFO%s] %s%s' % (fg(1), f"{self.title}", text, attr(0)))
+    print('%s[INFO%s] %s%s' % (fg(2), f"{self.title}", text, attr(0)))
 
   def error(self, text):
     print('%s[ERROR%s] %s%s' % (fg(1), f"{self.title}", text, attr(0)))
@@ -24,4 +24,4 @@ class MeasureTime():
     
     seconds = self.end - self.start
     
-    self.info(f'{seconds}s = {seconds*1000}ms')
+    self.info(f'{round(seconds * 100) / 100}s = {round(seconds*1000 * 100) / 100}ms')
